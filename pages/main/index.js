@@ -1,8 +1,9 @@
 import {ButtonComponent} from "../../components/button/index.js";
 import {ProductCardComponent} from "../../components/product-card/index.js";
 import {ProductPage} from "../product/index.js";
+import {EditPage} from "../edit/index.js";
 
-import { ms_news } from "./news_ms.js";
+//import { ms_news } from "./news_ms.js";
 import { getSumAndMultOfArray, equalArr, anagram } from "./my_func.js";
 
 import {ajax} from "../../modules/ajax.js";
@@ -12,19 +13,19 @@ export class MainPage {
     constructor(parent) {
         this.parent = parent;
         this.searchTerm = '';
-        this.now_news = [...ms_news];
+        this.now_news = [];//this.getData();//[...ms_news];
     }
     
     getData() {
         ajax.get(newUrls.getNews(), (data) => {
-            this.renderData(data);
+            this.renderData(data); this.now_news = data;
         })
     }
     
     renderData(items) {
         items.forEach((item) => {
             const newCard = new ProductCardComponent(this.pageRoot)
-            newCard.render(item, this.clickCard.bind(this))
+            newCard.render(item, this.clickCard.bind(this), this.deleteCard.bind(this), this.editCard.bind(this))
         })
     }
     
@@ -41,13 +42,10 @@ export class MainPage {
                         Найти
                     </button>
                 </div>
-
                 <div id="main-page" class="d-flex flex-wrap"></div>
             `
         )
     }
-    
-
 
     handleSearch() {
         const searchInput = document.getElementById('search-input');
@@ -83,14 +81,19 @@ export class MainPage {
     clickCard(e) {
         let cardId = e.target.dataset.id
         const data = this.now_news;//this.getData()
-        console.log(data)
         //const productPage = new ProductPage(this.parent, cardId, data[cardId-1].src, data[cardId-1].title, data[cardId-1].text)
         let getNew = data.find(news => news.id == cardId);
-        console.log(getNew)
         const productPage = new ProductPage(this.parent, cardId, getNew.src, getNew.title, getNew.text)
         productPage.render();
     }
 
+    editCard(e) {
+        let cardId = e.target.dataset.id
+        const data = this.now_news;
+        let getNew = data.find(news => news.id == cardId);
+        const editPage = new EditPage(this.parent, cardId, getNew.src, getNew.title, getNew.text)
+        editPage.render();
+    }
 
     /*deleteCard(e) {
         const cardId = e.target.dataset.id
@@ -117,9 +120,11 @@ export class MainPage {
         this.parent.innerHTML = ''
         const html = this.getHTML()
         this.parent.insertAdjacentHTML('beforeend', html)
-
-        this.getData()
-
+        console.log(this.now_news);
+        if(this.now_news.length == 0){
+        this.getData();
+        }
+        
         this.setupSearch();
         
         
@@ -135,7 +140,7 @@ export class MainPage {
         let arr_ids = []
         this.now_news.forEach((item) => {
             const productCard = new ProductCardComponent(this.pageRoot)
-            //productCard.render(item, this.clickCard.bind(this), this.deleteCard.bind(this))
+            productCard.render(item, this.clickCard.bind(this), this.deleteCard.bind(this), this.editCard.bind(this))
 
             arr_ids.push(Number(item.id))
         })
