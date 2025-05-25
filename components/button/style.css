@@ -1,0 +1,17 @@
+.flex-wrap{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn {height: 30px}
+
+input {
+    padding: 8px; width: 300px; border-radius: 8px; border: none; background-color: #333333;
+    color: #c9cccf;
+}
+
+.box {
+    padding: 8px; border-radius: 8px; border: none; background-color: #333333;
+    border: #6a6a6a solid 1px;
+}
