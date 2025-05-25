@@ -4,7 +4,7 @@ import {MainPage} from "../main/index.js";
 
 import {ajax} from "../../modules/ajax.js";
 import {newUrls} from "../../modules/newUrls.js";
-import {ProductCardComponent} from "../../components/product-card/index.js";
+//import {ProductCardComponent} from "../../components/product-card/index.js";
 
 function concatenate_info(arr, sep) {
     return arr.join(sep);
@@ -33,7 +33,7 @@ export class ProductPage {
         })
     }
     renderData(item) {
-        const product = new ProductCardComponent(this.pageRoot)
+        const product = new ProductComponent(this.pageRoot)
         product.render(item)
     }
 
